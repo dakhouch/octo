@@ -1,4 +1,4 @@
-package ma.octo.assignement.service.UtilisateurService;
+package ma.octo.assignement.service.userService;
 
 import ma.octo.assignement.domain.User;
 

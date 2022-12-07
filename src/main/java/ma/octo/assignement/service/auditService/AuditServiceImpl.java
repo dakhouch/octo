@@ -1,4 +1,4 @@
-package ma.octo.assignement.service.AuditService;
+package ma.octo.assignement.service.auditService;
 
 import ma.octo.assignement.domain.Audit;
 import ma.octo.assignement.domain.util.EventType;

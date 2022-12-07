@@ -6,7 +6,7 @@ import java.util.Date;
 
 @Entity
 @Table(name = "deposit")
-public class MoneyDeposit{
+public class Deposit {
 
   @Id
   @GeneratedValue(strategy = GenerationType.AUTO)

@@ -1,7 +1,7 @@
 package ma.octo.assignement.web;
 
 import ma.octo.assignement.domain.User;
-import ma.octo.assignement.service.UtilisateurService.UtilisateurService;
+import ma.octo.assignement.service.userService.UtilisateurService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

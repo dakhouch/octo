@@ -1,4 +1,4 @@
-package ma.octo.assignement.service.AuditService;
+package ma.octo.assignement.service.auditService;
 
 import ma.octo.assignement.dto.DepositDto;
 import ma.octo.assignement.dto.TransferDto;

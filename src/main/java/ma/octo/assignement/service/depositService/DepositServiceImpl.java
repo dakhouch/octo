@@ -1,23 +1,34 @@
-package ma.octo.assignement.service.MoneyDepositService;
+package ma.octo.assignement.service.depositService;
 import ma.octo.assignement.domain.Account;
-import ma.octo.assignement.domain.MoneyDeposit;
+import ma.octo.assignement.domain.Deposit;
+import ma.octo.assignement.domain.Transfer;
 import ma.octo.assignement.dto.DepositDto;
-import ma.octo.assignement.exceptions.CompteNonExistantException;
 import ma.octo.assignement.exceptions.TransactionException;
-import ma.octo.assignement.repository.MoneyDepositRepository;
+import ma.octo.assignement.repository.DepositRepository;
+import ma.octo.assignement.service.auditService.AuditService;
+import ma.octo.assignement.service.accountService.AccountService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
-public class MoneyDepositServiceImpl implements MoneyDepositService {
+public class DepositServiceImpl implements DepositService {
     private static final int MONTANT_MAXIMAL =10000 ;
-    Logger LOGGER = LoggerFactory.getLogger(MoneyDepositServiceImpl.class);
+    Logger LOGGER = LoggerFactory.getLogger(DepositServiceImpl.class);
    @Autowired
-    MoneyDepositRepository moneyDepositRepository;
-    public MoneyDeposit executeDeposit(DepositDto depositDto, Account compteBe) throws TransactionException {
+   DepositRepository depositRepository;
+   @Autowired
+   AccountService accountService;
+   @Autowired
+    AuditService auditService;
+
+    public List<Deposit> listDeposit() {return depositRepository.findAll();}
+    public void executeDeposit(DepositDto depositDto) throws TransactionException {
         LOGGER.info("depot de montant : "+depositDto.getMontant().toString());
+        //exceptions
         //remplace eqaul by ==
         if (depositDto.getMontant() == null || depositDto.getMontant().intValue() == 0) {
             throw new TransactionException("Montant vide");
@@ -30,12 +41,21 @@ public class MoneyDepositServiceImpl implements MoneyDepositService {
         if (depositDto.getMotif().length() ==0) {
             throw new TransactionException("Motif vide");
         }
-        MoneyDeposit deposit = new MoneyDeposit();
+
+        //get account beneficiare
+        Account compteBe=accountService.compteParNumC(depositDto.getNrCompteBeneficiaire());
+        //handle account
+        accountService.handleAccount(compteBe,depositDto.getMontant(),true);
+
+        Deposit deposit = new Deposit();
             deposit.setMontant(depositDto.getMontant());
             deposit.setDateExecution(depositDto.getDate());
             deposit.setMotifDeposit(depositDto.getMotif());
             deposit.setCompteBeneficiaire(compteBe);
-           return moneyDepositRepository.save(deposit);
+           depositRepository.save(deposit);
+
+           //audit
+           auditService.auditDeposit(depositDto);
 
     }
 }

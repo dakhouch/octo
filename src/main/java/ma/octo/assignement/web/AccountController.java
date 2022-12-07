@@ -1,7 +1,7 @@
 package ma.octo.assignement.web;
 
 import ma.octo.assignement.domain.Account;
-import ma.octo.assignement.service.CompteService.CompteService;
+import ma.octo.assignement.service.accountService.AccountService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +16,7 @@ import java.util.List;
 public class AccountController {
     Logger logger= LoggerFactory.getLogger(AccountController.class);
     @Autowired
-    CompteService compteService;
+    AccountService compteService;
 
     @GetMapping("listOfAccounts")
     List<Account> loadAllCompte() {
