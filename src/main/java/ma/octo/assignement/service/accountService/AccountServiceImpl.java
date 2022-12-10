@@ -15,35 +15,48 @@ import java.util.List;
 
 @Service
 public class AccountServiceImpl implements AccountService {
-    Logger LOGGER = LoggerFactory.getLogger(AccountServiceImpl.class);
-    @Autowired
-    AccountRepository compteRepository;
+    private Logger LOGGER = LoggerFactory.getLogger(AccountServiceImpl.class);
+
+    private AccountRepository accountRepository;
     @Override
     public List<Account> listComptes() {
-        return compteRepository.findAll();
+        return accountRepository.findAll();
     }
 
     @Override
-    public Account compteParNumC(String numCompte) {
+    public Account getAccountbyNumC(String numCompte) {
        LOGGER.info("compte num "+numCompte);
-        return compteRepository.findByNrCompte(numCompte);
+        return accountRepository.findByNrCompte(numCompte);
     }
 
-    public void handleAccount(Account account, BigDecimal montant, boolean bool) throws CompteNonExistantException,SoldeDisponibleInsuffisantException{
+    public Account addToAccount(Account account, BigDecimal montant) throws CompteNonExistantException,SoldeDisponibleInsuffisantException{
         //compte em et compte be dans un seul condition
         if (account == null) {
             throw new CompteNonExistantException("Compte Non existant");
         }
-        LOGGER.info("handle compte num "+account.getNrCompte());
+        LOGGER.info("ajouter le montant "+montant.floatValue()+"au compte num "+account.getNrCompte());
+
+        account.setSolde(account.getSolde().add(montant));
+
+        return accountRepository.save(account);
+    }
+    @Override
+    public Account subtractToAccount(Account account, BigDecimal montant) throws CompteNonExistantException,SoldeDisponibleInsuffisantException{
+        //compte em et compte be dans un seul condition
+        if (account == null) {
+            throw new CompteNonExistantException("Compte Non existant");
+        }
+        LOGGER.info("soustracter le montant "+montant.floatValue()+"au compte num "+account.getNrCompte());
         //trow exception if solde insufisant
-        if (account.getSolde().intValue() - montant.intValue() < 0 && !bool) {
+        if (account.getSolde().floatValue() - montant.floatValue() < 0) {
             throw new SoldeDisponibleInsuffisantException("Solde insuffisant pour l'utilisateur");
         }
-       if(bool) account.setSolde(account.getSolde().add(montant));
-      else{account.setSolde(account.getSolde().subtract(montant));}
-        compteRepository.save(account);
+         account.setSolde(account.getSolde().subtract(montant));
+        return accountRepository.save(account);
     }
-
-
+    @Autowired
+    public void setAccountRepository(AccountRepository accountRepository) {
+        this.accountRepository = accountRepository;
+    }
 }
 

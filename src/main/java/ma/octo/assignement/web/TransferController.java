@@ -40,6 +40,6 @@ class TransferController {
     public void createTransaction(@RequestBody TransferDto transferDto)
             throws SoldeDisponibleInsuffisantException, CompteNonExistantException, TransactionException {
         LOGGER.trace("mapping executeTransfers");
-        transferService.executerTransfer(transferDto);
+        transferService.executeTransfer(transferDto);
     }
 }

@@ -12,32 +12,47 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+
 import java.util.List;
 
 @Service
 public class TransferServiceImpl implements TransferService {
     Logger LOGGER = LoggerFactory.getLogger(TransferServiceImpl.class);
     private static final int MONTANT_MAXIMAL =10000 ;
-    @Autowired
+
     TransferRepository transferRepository;
-    @Autowired
-    AccountService compteService;
-    @Autowired
+    AccountService accountService;
     AuditService auditService;
+    @Autowired
+    public void setTransferRepository(TransferRepository transferRepository) {
+        this.transferRepository = transferRepository;
+    }
+    @Autowired
+    public void setAccountService(AccountService compteService) {
+        this.accountService = compteService;
+    }
+    @Autowired
+    public void setAuditService(AuditService auditService) {
+        this.auditService = auditService;
+    }
 
     @Override
     public List<Transfer> listTransfers() {
-        return transferRepository.findAll();
+       return transferRepository.findAll();
     }
-    public void executerTransfer(TransferDto transferDto) throws CompteNonExistantException, TransactionException{
+    @Override
+    @Transactional
+    public Transfer executeTransfer(TransferDto transferDto) throws CompteNonExistantException, TransactionException{
         LOGGER.info("transfer de montant : "+transferDto.getMontant().toString());
         //exceptions
         //remplace eqaul by ==
-        if (transferDto.getMontant() == null || transferDto.getMontant().intValue() == 0) {
+        if (transferDto.getMontant().intValue() == 0) {
             throw new TransactionException("Montant vide");
-        }else if (transferDto.getMontant().intValue() < 10) {
+        }else if (transferDto.getMontant().floatValue() < 10) {
             throw new TransactionException("Montant minimal de transfer non atteint");
-        } else if (transferDto.getMontant().intValue() > MONTANT_MAXIMAL) {
+        } else if (transferDto.getMontant().floatValue() > MONTANT_MAXIMAL) {
             throw new TransactionException("Montant maximal de transfer dépassé");
         }
         //  <0 -> ==0
@@ -45,19 +60,20 @@ public class TransferServiceImpl implements TransferService {
             throw new TransactionException("Motif vide");
         }
        //get accounts
-        Account compteEm=compteService.compteParNumC(transferDto.getNrCompteEmetteur());
-        Account compteBe=compteService.compteParNumC(transferDto.getNrCompteBeneficiaire());
+        Account compteEmetteur=accountService.getAccountbyNumC(transferDto.getNrCompteEmetteur());
+        Account compteBenefeciaire=accountService.getAccountbyNumC(transferDto.getNrCompteBeneficiaire());
       //handle acounts
-        compteService.handleAccount(compteEm,transferDto.getMontant(),false);
-        compteService.handleAccount(compteBe,transferDto.getMontant(),true);
+        accountService.subtractToAccount(compteEmetteur,transferDto.getMontant());
+        accountService.addToAccount(compteBenefeciaire,transferDto.getMontant());
 
         Transfer transfer=new Transfer();
-        transfer.setCompteBeneficiaire(compteBe);
-        transfer.setCompteEmetteur(compteEm);
+        transfer.setCompteBeneficiaire(compteBenefeciaire);
+        transfer.setCompteEmetteur(compteEmetteur);
         transfer.setDateExecution(transferDto.getDate());
         transfer.setMotifTransfer(transferDto.getMotif());
         transfer.setMontantTransfer(transferDto.getMontant());
-        transferRepository.save(transfer);
         auditService.auditTransfer(transferDto);
+        return transferRepository.save(transfer);
     }
+
 }

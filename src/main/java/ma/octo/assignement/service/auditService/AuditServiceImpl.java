@@ -18,8 +18,13 @@ public class AuditServiceImpl implements AuditService {
 
     Logger LOGGER = LoggerFactory.getLogger(AuditServiceImpl.class);
 
-    @Autowired
+
     private AuditRepository auditRepository;
+
+    @Autowired
+    public void setAuditRepository(AuditRepository auditRepository) {
+        this.auditRepository = auditRepository;
+    }
 
     public void auditTransfer(TransferDto transferDto) {
         LOGGER.info("Audit de l'événement {}", EventType.TRANSFER);

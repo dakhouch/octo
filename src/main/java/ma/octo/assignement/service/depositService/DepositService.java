@@ -7,7 +7,7 @@ import ma.octo.assignement.dto.DepositDto;
 import java.util.List;
 
 public interface DepositService {
-    public void executeDeposit(DepositDto depositDto);
+    public Deposit executeDeposit(DepositDto depositDto);
 
     public List<Deposit> listDeposit();
 }

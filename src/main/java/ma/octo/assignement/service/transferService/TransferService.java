@@ -9,6 +9,6 @@ import java.util.List;
 
 public interface TransferService {
     public List<Transfer> listTransfers();
-    public void executerTransfer(TransferDto transferDto) throws CompteNonExistantException, TransactionException;
+    public Transfer executeTransfer(TransferDto transferDto) throws CompteNonExistantException, TransactionException;
 
 }
