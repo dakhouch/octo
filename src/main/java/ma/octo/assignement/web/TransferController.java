@@ -24,10 +24,6 @@ class TransferController {
     Logger LOGGER = LoggerFactory.getLogger(TransferController.class);
     @Autowired
     private TransferService transferService;
-    @Autowired
-    AccountService compteService;
-    @Autowired
-    AuditService auditTransferService;
 
 
     @PreAuthorize("hasAuthority('admin')")

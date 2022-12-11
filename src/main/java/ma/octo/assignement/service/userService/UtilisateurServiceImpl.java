@@ -23,15 +23,13 @@ public class UtilisateurServiceImpl implements UtilisateurService{
         LOGGER.info("recuperer les utilisateurs");
         return utilisateurRepository.findAll();
     }
-
-    public void save(User user){
+    @Override
+    public User save(User user){
         // validation input
-
 
         // encrypt password
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-
         // save
-        utilisateurRepository.save(user);
+        return utilisateurRepository.save(user);
     }
 }

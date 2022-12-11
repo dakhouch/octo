@@ -15,12 +15,14 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @Service
 public class TransferServiceImpl implements TransferService {
     Logger LOGGER = LoggerFactory.getLogger(TransferServiceImpl.class);
     private static final int MONTANT_MAXIMAL =10000 ;
+    private static final int MONTANT_MINIMAL =10;
 
     TransferRepository transferRepository;
     AccountService accountService;
@@ -50,13 +52,13 @@ public class TransferServiceImpl implements TransferService {
         //remplace eqaul by ==
         if (transferDto.getMontant().intValue() == 0) {
             throw new TransactionException("Montant vide");
-        }else if (transferDto.getMontant().floatValue() < 10) {
+        }else if (transferDto.getMontant().compareTo(BigDecimal.valueOf(MONTANT_MINIMAL)) < 0) {
             throw new TransactionException("Montant minimal de transfer non atteint");
-        } else if (transferDto.getMontant().floatValue() > MONTANT_MAXIMAL) {
+        } else if (transferDto.getMontant().compareTo(BigDecimal.valueOf(MONTANT_MAXIMAL)) > 0) {
             throw new TransactionException("Montant maximal de transfer dépassé");
         }
         //  <0 -> ==0
-        if (transferDto.getMotif().length() ==0 || transferDto.getMotif()==null) {
+        if (transferDto.getMotif().length() ==0) {
             throw new TransactionException("Motif vide");
         }
        //get accounts

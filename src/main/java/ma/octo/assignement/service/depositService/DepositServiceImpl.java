@@ -12,11 +12,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @Service
 public class DepositServiceImpl implements DepositService {
     private static final int MONTANT_MAXIMAL =10000 ;
+    private static final int MONTANT_MINIMAL =10;
     Logger LOGGER = LoggerFactory.getLogger(DepositServiceImpl.class);
 
    private DepositRepository depositRepository;
@@ -46,11 +48,11 @@ public class DepositServiceImpl implements DepositService {
         LOGGER.info("depot de montant : "+depositDto.getMontant().toString());
         //exceptions
         //remplace eqaul by ==
-        if (depositDto.getMontant().floatValue() == 0) {
+        if (depositDto.getMontant().compareTo(BigDecimal.valueOf(0))==0) {
             throw new TransactionException("Montant vide");
-        }else if (depositDto.getMontant().floatValue() < 10) {
+        }else if (depositDto.getMontant().compareTo(BigDecimal.valueOf(MONTANT_MINIMAL)) < 0) {
             throw new TransactionException("Montant minimal de depot non atteint");
-        } else if (depositDto.getMontant().floatValue() > MONTANT_MAXIMAL) {
+        } else if (depositDto.getMontant().compareTo(BigDecimal.valueOf(MONTANT_MAXIMAL)) > 0) {
             throw new TransactionException("Montant maximal de depot dépassé");
         }
         //  <0 -> ==0

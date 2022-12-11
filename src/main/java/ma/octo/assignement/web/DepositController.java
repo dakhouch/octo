@@ -20,11 +20,8 @@ import org.springframework.web.bind.annotation.*;
 public class DepositController {
     Logger logger= LoggerFactory.getLogger(DepositController.class);
     @Autowired
-    AccountService compteService;
-    @Autowired
     DepositService depositService;
-    @Autowired
-    AuditService auditService;
+
 
     @PreAuthorize("hasAuthority('user')")
     @PostMapping("/executeDeposits")
