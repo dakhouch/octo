@@ -11,6 +11,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -29,12 +30,14 @@ class TransferController {
     AuditService auditTransferService;
 
 
+    @PreAuthorize("hasAuthority('admin')")
     @GetMapping("listOfTransfers")
     List<Transfer> loadAllTransfers() {
         LOGGER.trace("mapping listOfTransfers");
        return transferService.listTransfers();
     }
 
+    @PreAuthorize("hasAuthority('user')")
     @PostMapping("/executeTransfers")
     @ResponseStatus(HttpStatus.CREATED)
     public void createTransaction(@RequestBody TransferDto transferDto)

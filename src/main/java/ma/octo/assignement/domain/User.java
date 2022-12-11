@@ -2,6 +2,8 @@ package ma.octo.assignement.domain;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 
 @Entity
@@ -25,6 +27,12 @@ public class User implements Serializable {
 
   @Temporal(TemporalType.DATE)
   private Date birthdate;
+
+  @Column(length = 60)
+  private String password;
+
+  @OneToMany
+  Collection<AuthRole> roles=new ArrayList<>();
 
 
   public String getGender() {
@@ -73,5 +81,21 @@ public class User implements Serializable {
 
   public void setId(Long id) {
     this.id = id;
+  }
+
+  public String getPassword() {
+    return password;
+  }
+
+  public void setPassword(String password) {
+    this.password = password;
+  }
+
+  public Collection<AuthRole> getRoles() {
+    return roles;
+  }
+
+  public void setRoles(Collection<AuthRole> roles) {
+    this.roles = roles;
   }
 }
