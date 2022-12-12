@@ -50,7 +50,7 @@ public class TransferServiceImpl implements TransferService {
         LOGGER.info("transfer de montant : "+transferDto.getMontant().toString());
         //exceptions
         //remplace eqaul by ==
-        if (transferDto.getMontant().intValue() == 0) {
+        if (transferDto.getMontant().compareTo(BigDecimal.valueOf(0)) == 0) {
             throw new TransactionException("Montant vide");
         }else if (transferDto.getMontant().compareTo(BigDecimal.valueOf(MONTANT_MINIMAL)) < 0) {
             throw new TransactionException("Montant minimal de transfer non atteint");
@@ -74,7 +74,10 @@ public class TransferServiceImpl implements TransferService {
         transfer.setDateExecution(transferDto.getDate());
         transfer.setMotifTransfer(transferDto.getMotif());
         transfer.setMontantTransfer(transferDto.getMontant());
+
+        //audit
         auditService.auditTransfer(transferDto);
+
         return transferRepository.save(transfer);
     }
 

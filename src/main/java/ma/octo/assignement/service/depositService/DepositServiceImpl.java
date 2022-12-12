@@ -47,7 +47,6 @@ public class DepositServiceImpl implements DepositService {
     public Deposit executeDeposit(DepositDto depositDto) throws TransactionException {
         LOGGER.info("depot de montant : "+depositDto.getMontant().toString());
         //exceptions
-        //remplace eqaul by ==
         if (depositDto.getMontant().compareTo(BigDecimal.valueOf(0))==0) {
             throw new TransactionException("Montant vide");
         }else if (depositDto.getMontant().compareTo(BigDecimal.valueOf(MONTANT_MINIMAL)) < 0) {
@@ -65,6 +64,7 @@ public class DepositServiceImpl implements DepositService {
         //handle account
         accountService.addToAccount(compteBeneficiare,depositDto.getMontant());
 
+        //creation de lobjet Deposit
         Deposit deposit = new Deposit();
             deposit.setMontant(depositDto.getMontant());
             deposit.setDateExecution(depositDto.getDate());

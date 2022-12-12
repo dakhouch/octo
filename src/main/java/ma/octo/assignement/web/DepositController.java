@@ -23,7 +23,7 @@ public class DepositController {
     DepositService depositService;
 
 
-    @PreAuthorize("hasAuthority('user')")
+    @PreAuthorize("hasAuthority('USER')")
     @PostMapping("/executeDeposits")
     @ResponseStatus(HttpStatus.CREATED)
     public void createTransaction(@RequestBody DepositDto depositDto)

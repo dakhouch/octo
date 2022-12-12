@@ -19,7 +19,7 @@ public class UserController {
     @Autowired
     UtilisateurService utilisateurService;
 
-    @PreAuthorize("hasAuthority('admin')")
+    @PreAuthorize("hasAuthority('USER')")
     @GetMapping("listOfUsers")
     List<User> loadAllUtilisateur() {
         logger.trace("mapping /listOfUsers");

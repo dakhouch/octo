@@ -30,7 +30,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
 
-        //Cross-site request forgery to stop generation of token synchronizer
+
         http.csrf().disable();
 
         // disable creation of session by spring security

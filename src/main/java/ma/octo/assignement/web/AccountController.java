@@ -18,7 +18,7 @@ public class AccountController {
     Logger logger= LoggerFactory.getLogger(AccountController.class);
     @Autowired
     AccountService compteService;
-    @PreAuthorize("hasAuthority('admin')")
+    @PreAuthorize("hasAuthority('ADMIN')")
     @GetMapping("listOfAccounts")
     List<Account> loadAllCompte() {
         logger.trace("mapping /listOfAccounts");

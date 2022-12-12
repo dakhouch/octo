@@ -44,11 +44,14 @@ public class AccountServiceTest {
     public void test_if_sold_retired_from_Account(float montant){
         //Arrange
         when(accountRepository.save(any(Account.class))).then(returnsFirstArg());
+
         Account compteAvant = new Account();
-        BigDecimal montantRetirer=BigDecimal.valueOf(montant);
         compteAvant.setNrCompte("010000A000001000");
         compteAvant.setRib("RIB1");
         compteAvant.setSolde(BigDecimal.valueOf(200000));
+
+        BigDecimal montantRetirer=BigDecimal.valueOf(montant);
+
         BigDecimal soldeAvant=compteAvant.getSolde();
         //Act
         Account compteApres=accountService.subtractToAccount(compteAvant,montantRetirer);
@@ -77,10 +80,12 @@ public class AccountServiceTest {
     public void test_exception_withdrawing_amount_greaterThan_theBalance() throws Exception{
         //Arrange
         Account compteAvant = new Account();
-        BigDecimal montantRetirer=BigDecimal.valueOf(250000);
         compteAvant.setNrCompte("010000A000001000");
         compteAvant.setRib("RIB1");
         compteAvant.setSolde(BigDecimal.valueOf(200000));
+
+        BigDecimal montantRetirer=BigDecimal.valueOf(250000);
+
         //Act
         SoldeDisponibleInsuffisantException thrown = Assertions.assertThrows(SoldeDisponibleInsuffisantException.class, () -> {
                 Account compteApres=accountService.subtractToAccount(compteAvant,montantRetirer);

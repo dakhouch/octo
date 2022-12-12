@@ -19,12 +19,6 @@ import java.util.Date;
 
 @SpringBootApplication
 public class BankApplication implements CommandLineRunner {
-	@Autowired
-	private AccountRepository compteRepository;
-	@Autowired
-	private UserRepository utilisateurRepository;
-	@Autowired
-	private TransferRepository transferRepository;
 
 	public static void main(String[] args) {
 		SpringApplication.run(BankApplication.class, args);

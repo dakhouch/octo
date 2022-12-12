@@ -14,7 +14,7 @@ public class ExceptionHandelingController {
 
     @ExceptionHandler(SoldeDisponibleInsuffisantException.class)
     public ResponseEntity<String> handleSoldeDisponibleInsuffisantException(Exception ex) {
-        return new ResponseEntity<>(ex.getMessage(), null, HttpStatus.UNAVAILABLE_FOR_LEGAL_REASONS);
+        return new ResponseEntity<>(ex.getMessage(), null, HttpStatus.UNAUTHORIZED);
     }
 
     @ExceptionHandler(CompteNonExistantException.class)

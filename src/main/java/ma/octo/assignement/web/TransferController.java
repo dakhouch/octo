@@ -33,7 +33,7 @@ class TransferController {
        return transferService.listTransfers();
     }
 
-    @PreAuthorize("hasAuthority('user')")
+    @PreAuthorize("hasAuthority('USER')")
     @PostMapping("/executeTransfers")
     @ResponseStatus(HttpStatus.CREATED)
     public void createTransaction(@RequestBody TransferDto transferDto)

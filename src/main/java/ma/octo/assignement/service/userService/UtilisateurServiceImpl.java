@@ -26,7 +26,6 @@ public class UtilisateurServiceImpl implements UtilisateurService{
     @Override
     public User save(User user){
         // validation input
-
         // encrypt password
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         // save
